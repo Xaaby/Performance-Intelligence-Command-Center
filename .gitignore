@@ -1,0 +1,17 @@
+# Secrets (keep .env.example committed as templates)
+.env
+.env.local
+.env.*.local
+
+node_modules/
+dist/
+build/
+*.log
+.DS_Store
+
+# Local SQLite / dev artifacts
+*.db
+*.db-shm
+*.db-wal
+tsconfig.tsbuildinfo
+vite.config.ts.timestamp-*.mjs
