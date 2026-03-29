@@ -6,8 +6,8 @@
 ## Quick Start
 
 ```bash
-git clone <repository-url>
-cd traffic-intelligence-framework
+git clone https://github.com/Xaaby/Performance-Intelligence-Command-Center.git
+cd Performance-Intelligence-Command-Center
 cp .env.example .env
 cd backend/data
 pip install -r requirements.txt
