@@ -13,4 +13,4 @@ RUN npm run build && npm prune --omit=dev
 
 EXPOSE 3001
 
-CMD ["npm", "run", "start"]
+CMD ["node", "dist/main.js"]
