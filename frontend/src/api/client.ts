@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getApiBaseUrl } from '../lib/apiBase';
 import type {
   ExperimentsResponse,
   LiveVendorScoreUpdate,
@@ -9,11 +10,10 @@ import type {
   VendorsResponse,
 } from '../types/vendor.types';
 
-const baseURL = import.meta.env.VITE_API_URL ?? '/api';
-
 export const api = axios.create({
-  baseURL,
+  baseURL: getApiBaseUrl(),
   headers: { 'Content-Type': 'application/json' },
+  timeout: 10_000,
 });
 
 export async function getVendors(): Promise<VendorsResponse> {

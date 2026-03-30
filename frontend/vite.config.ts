@@ -10,7 +10,10 @@ const envDir = path.resolve(__dirname, '..');
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, envDir, '');
-  const proxyTarget = env.VITE_PROXY_TARGET || 'http://localhost:3001';
+  // Dev-only: browser calls `/api/*` → forwarded to the Nest process. Production builds use `VITE_API_URL`
+  // (see `getApiBaseUrl()`); do not point this proxy at `VITE_API_URL` — that breaks local dev.
+  const proxyTarget =
+    process.env.VITE_PROXY_TARGET || env.VITE_PROXY_TARGET || 'http://localhost:3001';
 
   return {
     plugins: [react(), tailwindcss()],

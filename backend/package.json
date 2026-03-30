@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/main.js",
+    "start:prod": "node dist/main.js",
     "start:dev": "nodemon --watch src --ext ts --exec \"ts-node -r tsconfig-paths/register src/main.ts\"",
     "test": "jest"
   },

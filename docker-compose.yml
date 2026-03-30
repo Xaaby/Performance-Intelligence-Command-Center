@@ -8,6 +8,7 @@ services:
     ports:
       - "3001:3001"
     volumes:
+      # Persist SQLite (clicks.db) and bundled data: backend uses process.cwd()/data → /app/data in the image
       - ./backend/data:/app/data
     environment:
       - NODE_ENV=production
@@ -27,6 +28,9 @@ services:
       dockerfile: Dockerfile
       args:
         VITE_API_URL: http://localhost:3001/api
+    environment:
+      # For `vite` dev inside this network; default `serve` CMD does not use the proxy.
+      - VITE_PROXY_TARGET=http://backend:3001
     ports:
       - "5173:5173"
     depends_on:

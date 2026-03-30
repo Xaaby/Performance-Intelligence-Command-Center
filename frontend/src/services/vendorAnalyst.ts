@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from '../lib/apiBase';
 import type { VendorScore } from '../types/vendor.types';
 
 /** Gemini model id (Google AI Studio). Override with VITE_GEMINI_MODEL if needed. */
@@ -78,8 +79,7 @@ function toGeminiRole(role: string): 'user' | 'model' {
 }
 
 function analystApiUrl(): string {
-  const base = (import.meta.env.VITE_API_URL ?? '/api').replace(/\/$/, '');
-  return `${base}/gemini/generateContent`;
+  return `${getApiBaseUrl()}/gemini/generateContent`;
 }
 
 function nestErrorMessage(data: { message?: string | string[] }): string {
