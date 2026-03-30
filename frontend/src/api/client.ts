@@ -31,16 +31,28 @@ const EMPTY_VENDORS_SUMMARY: VendorsSummary = {
 
 export async function getVendors(): Promise<VendorsResponse> {
   const { data } = await api.get<unknown>('/vendors');
-  const d = data as Partial<VendorsResponse> | null | undefined;
+  if (data === null || typeof data !== 'object' || Array.isArray(data)) {
+    throw new Error('Invalid vendors response: expected a JSON object');
+  }
+  const d = data as Record<string, unknown>;
+  if (!('vendors' in d)) {
+    const msg = d.message;
+    throw new Error(
+      typeof msg === 'string'
+        ? msg
+        : 'Invalid vendors response: missing vendors (check VITE_API_URL points at the Nest API /api)',
+    );
+  }
+  const raw = d as Partial<VendorsResponse>;
   return {
-    vendors: asArray<VendorScore>(d?.vendors),
+    vendors: asArray<VendorScore>(raw.vendors),
     summary:
-      d?.summary && typeof d.summary === 'object' && d.summary !== null
-        ? (d.summary as VendorsSummary)
+      raw.summary && typeof raw.summary === 'object' && raw.summary !== null
+        ? (raw.summary as VendorsSummary)
         : EMPTY_VENDORS_SUMMARY,
     computed_at:
-      typeof d?.computed_at === 'string'
-        ? d.computed_at
+      typeof raw.computed_at === 'string'
+        ? raw.computed_at
         : new Date().toISOString(),
   };
 }

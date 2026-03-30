@@ -10,6 +10,7 @@ export function useLiveFeed(suspended = false) {
   const [stats, setStats] = useState<RedirectStatsResponse | null>(null);
   const [events, setEvents] = useState<RedirectEvent[]>([]);
   const [updates, setUpdates] = useState<LiveVendorScoreUpdate[]>([]);
+  /** Last live click traffic (events or non-zero 60s rollups). Stale only if this was set then went quiet. */
   const [lastReceivedAt, setLastReceivedAt] = useState<number | null>(null);
 
   const refreshStats = useCallback(async () => {
@@ -68,7 +69,9 @@ export function useLiveFeed(suspended = false) {
     };
   }, [refreshEvents, refreshStats, refreshUpdates, suspended]);
 
-  const stale = lastReceivedAt === null ? true : Date.now() - lastReceivedAt > 30_000;
+  // Before any live clicks exist, lastReceivedAt stays null — do not show "sync latency" (that was a false positive on fresh deploys).
+  const stale =
+    lastReceivedAt !== null && Date.now() - lastReceivedAt > 30_000;
 
   return {
     stats,
