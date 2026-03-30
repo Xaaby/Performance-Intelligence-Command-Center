@@ -11,6 +11,7 @@ import {
   YAxis,
 } from 'recharts';
 import type { TooltipProps } from 'recharts';
+import { asArray } from '../lib/asArray';
 import type { VendorScore } from '../types/vendor.types';
 import { isHiddenFraudArchetype } from '../lib/scoring';
 
@@ -98,11 +99,12 @@ type Props = {
 };
 
 export function ReallocationView({
-  vendors,
+  vendors: vendorsProp,
   loading,
   error,
   onRetry,
 }: Props) {
+  const vendors = asArray<VendorScore>(vendorsProp);
   const [animKey, setAnimKey] = useState(0);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isPrintMode, setIsPrintMode] = useState(false);

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getVendors } from '../api/client';
+import { asArray } from '../lib/asArray';
 import type { VendorScore, VendorsResponse } from '../types/vendor.types';
 
 const POLL_MS = 30_000;
@@ -28,7 +29,7 @@ export function useVendors() {
   }, [refresh]);
 
   return {
-    vendors: data?.vendors ?? ([] as VendorScore[]),
+    vendors: asArray<VendorScore>(data?.vendors),
     summary: data?.summary ?? null,
     computedAt: data?.computed_at ?? null,
     loading,

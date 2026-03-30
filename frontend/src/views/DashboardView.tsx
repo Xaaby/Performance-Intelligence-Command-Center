@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { DashboardFilter, VendorScore, VendorsSummary } from '../types/vendor.types';
+import type {
+  DashboardFilter,
+  LiveVendorScoreUpdate,
+  VendorScore,
+  VendorsSummary,
+} from '../types/vendor.types';
 import type { SystemStatus } from '../App';
 import type { AppTab } from '../components/layout/Navigation';
 import { LiveFeedPanel, type FeedRowItem } from '../components/dashboard/LiveFeedPanel';
@@ -7,6 +12,7 @@ import { VendorTable } from '../components/dashboard/VendorTable';
 import { VendorAnalystPanel } from '../components/chat/VendorAnalystPanel';
 import { WithoutFraudPanel } from '../components/dashboard/WithoutFraudPanel';
 import { useLiveFeed } from '../hooks/useLiveFeed';
+import { asArray } from '../lib/asArray';
 
 type Props = {
   vendors: VendorScore[];
@@ -22,7 +28,7 @@ type Props = {
 };
 
 export function DashboardView({
-  vendors,
+  vendors: vendorsProp,
   summary,
   loading,
   error,
@@ -33,6 +39,7 @@ export function DashboardView({
   onLiveClicksChange,
   externalVendorFocus,
 }: Props) {
+  const vendors = asArray<VendorScore>(vendorsProp);
   const suspended = systemStatus === 'SUSPENDED';
   const { stats, events, updates, stale } = useLiveFeed(suspended);
   const [executeLoading, setExecuteLoading] = useState(false);
@@ -74,7 +81,7 @@ export function DashboardView({
 
   const displayVendors = simulationVendors ?? vendors;
   const changedVendorIds = new Set(
-    updates
+    asArray<LiveVendorScoreUpdate>(updates)
       .filter((u) => Date.now() - Date.parse(u.changed_at) <= 15_000)
       .map((u) => u.vendor_id),
   );

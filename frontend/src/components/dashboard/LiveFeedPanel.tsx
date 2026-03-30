@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
+import { asArray } from '../../lib/asArray';
 import type {
   RedirectEvent,
   RedirectStatsResponse,
+  RedirectVendorStats,
   VendorScore,
 } from '../../types/vendor.types';
 import type { SystemStatus } from '../../App';
@@ -35,7 +37,7 @@ function formatPct(x: number): string {
 export function LiveFeedPanel({
   stats,
   events,
-  vendors,
+  vendors: vendorsProp,
   stale,
   systemStatus,
   injectedRows = [],
@@ -43,10 +45,11 @@ export function LiveFeedPanel({
   onFeedEventClick,
   onRequestHide,
 }: Props) {
+  const vendors = asArray<VendorScore>(vendorsProp);
   const suspended = systemStatus === 'SUSPENDED';
 
   const totals = useMemo(() => {
-    const list = stats?.vendors ?? [];
+    const list = asArray<RedirectVendorStats>(stats?.vendors);
     const total = stats?.total_clicks_last_60s ?? 0;
     const real = list.reduce((sum, v) => sum + v.real_clicks, 0);
     const bot = list.reduce((sum, v) => sum + v.bot_clicks, 0);
@@ -61,7 +64,9 @@ export function LiveFeedPanel({
   const fallbackFraud = vendors
     .filter((v) => v.fraud_status !== 'clean' || v.budget_decision === 'emergency_pause')
     .slice(0, 3);
-  const topBotVendor = [...(stats?.vendors ?? [])].sort((a, b) => b.bot_clicks - a.bot_clicks)[0];
+  const topBotVendor = [...asArray<RedirectVendorStats>(stats?.vendors)].sort(
+    (a, b) => b.bot_clicks - a.bot_clicks,
+  )[0];
   const recentEvent = events[0];
   const improvVendor = [...vendors].sort((a, b) => b.effective_score - a.effective_score)[0];
   const reallocation = fallbackFraud[0];

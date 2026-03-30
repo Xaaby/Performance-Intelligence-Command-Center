@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { asArray } from '../../lib/asArray';
 import type { VendorScore } from '../../types/vendor.types';
 import type { SystemStatus } from '../../App';
 
@@ -14,13 +15,14 @@ type Props = {
 };
 
 export function WithoutFraudPanel({
-  vendors,
+  vendors: vendorsProp,
   systemStatus,
   onExecute,
   executeLoading,
   filterActive,
   feedVisible,
 }: Props) {
+  const vendors = asArray<VendorScore>(vendorsProp);
   const fraudVendors = vendors.filter((v) => v.fraud_status !== 'clean');
   const cleanVendors = vendors.filter((v) => !fraudVendors.some((f) => f.vendor_id === v.vendor_id));
   const fraudVendorsBase = vendors.filter(

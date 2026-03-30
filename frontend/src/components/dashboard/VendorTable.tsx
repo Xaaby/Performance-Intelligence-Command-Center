@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { asArray } from '../../lib/asArray';
 import type { DashboardFilter, VendorScore } from '../../types/vendor.types';
 import { VendorRow } from './VendorRow';
 import type { SystemStatus } from '../../App';
@@ -41,7 +42,7 @@ function filterVendors(
 const FILTER_TABS: { id: DashboardFilter; label: string }[] = [{ id: 'all', label: 'All' }, { id: 'fraud_alert', label: 'At Risk' }];
 
 export function VendorTable({
-  vendors,
+  vendors: vendorsProp,
   changedVendorIds,
   systemStatus,
   quarantinedIds,
@@ -56,6 +57,7 @@ export function VendorTable({
   pulseAtRiskTabKey,
   onOpenVendorChat,
 }: Props) {
+  const vendors = asArray<VendorScore>(vendorsProp);
   const [filter, setFilter] = useState<DashboardFilter>('all');
   const [query, setQuery] = useState('');
   const [sortBy, setSortBy] = useState<'effective_score' | 'tqs'>('effective_score');

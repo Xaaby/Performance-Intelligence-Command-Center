@@ -15,9 +15,11 @@ export function useLiveFeed(suspended = false) {
   const refreshStats = useCallback(async () => {
     try {
       const res = await getRedirectStats();
-      setStats(res);
-      if (res.total_clicks_last_60s > 0) {
-        setLastReceivedAt(Date.now());
+      if (res && typeof res === 'object' && !Array.isArray(res)) {
+        setStats(res);
+        if (res.total_clicks_last_60s > 0) {
+          setLastReceivedAt(Date.now());
+        }
       }
     } catch {
       // Keep dashboard alive during transient backend errors.
@@ -27,8 +29,9 @@ export function useLiveFeed(suspended = false) {
   const refreshEvents = useCallback(async () => {
     try {
       const res = await getRedirectEvents(undefined, 10);
-      setEvents(res);
-      if (res.length > 0) {
+      const safeEvents = Array.isArray(res) ? res : [];
+      setEvents(safeEvents);
+      if (safeEvents.length > 0) {
         setLastReceivedAt(Date.now());
       }
     } catch {
@@ -39,7 +42,7 @@ export function useLiveFeed(suspended = false) {
   const refreshUpdates = useCallback(async () => {
     try {
       const res = await getLiveVendorUpdates();
-      setUpdates(res);
+      setUpdates(Array.isArray(res) ? res : []);
     } catch {
       // Keep dashboard alive during transient backend errors.
     }

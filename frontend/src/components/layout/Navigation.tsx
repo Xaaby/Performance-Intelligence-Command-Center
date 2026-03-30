@@ -1,4 +1,5 @@
 import type { SystemStatus } from '../../App';
+import { asArray } from '../../lib/asArray';
 import type { VendorScore } from '../../types/vendor.types';
 
 export type AppTab = 'dashboard' | 'simulator' | 'experiments' | 'reallocation';
@@ -18,10 +19,11 @@ export function Navigation({
   elapsedTime,
   lastScoredDisplay,
   onEmergencyClick,
-  vendors,
+  vendors: vendorsProp,
   totalClicksFromRedirectStats,
   onAlertVendorClick,
 }: Props) {
+  const vendors = asArray<VendorScore>(vendorsProp);
   const suspended = systemStatus === 'SUSPENDED';
   const componentStatuses = [
     'Scoring Engine',
