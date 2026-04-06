@@ -1,4 +1,8 @@
-# Traffic Intelligence Framework — Demo
+# Traffic Intelligence Framework, Demo
+
+Demo Link: https://share.vidyard.com/watch/DYzXv8SScfez7zo6ffpthB
+
+Live Application Hosted: (https://performance-intelligence-command-ce-alpha.vercel.app/)
 
 *(Repository: [Performance-Intelligence-Command-Center](https://github.com/Xaaby/Performance-Intelligence-Command-Center))*
 
